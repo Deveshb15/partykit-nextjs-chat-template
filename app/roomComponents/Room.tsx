@@ -19,7 +19,7 @@ export default function Room() {
   const chatListRef = useRef(null);
 
   const users = useUsers(provider!.awareness);
-  console.log(users?.size);
+  // console.log(users?.size);
   const self = useSelf(provider!.awareness);
   // Get room details
   const room = RoomMap[name];
