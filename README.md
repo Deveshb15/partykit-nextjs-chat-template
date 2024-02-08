@@ -1,8 +1,6 @@
 PartyKit is an open source platform for developing multiplayer, real-time applications.
 
-This is a [PartyKit](https://partykit.io) project using [Next.js](https://nextjs.org/) bootstrapped with [`partykit-nextjs-chat-template`](https://github.com/partykit/partykit-nextjs-chat-template).
-
-There's a live hosted demo of this template at [https://partykit-nextjs-chat-template.vercel.app/](https://partykit-nextjs-chat-template.vercel.app/).
+This is a [PartyKit](https://partykit.io) project using [Next.js](https://nextjs.org/)
 
 ## Getting Started
 
@@ -29,17 +27,6 @@ This template application demonstrates various use cases of PartyKit.
 
 
 The [`/party`](party/) directory contains partykit servers with the following examples:
-- 💬 [chatRoom.ts](party/chatRoom.ts) — Real-time chat room with persistence 
-- 👩‍👩‍👦‍👦 [chatRooms.ts](party/chatRooms.ts) — Presence and room-to-room communication 
-- 🤖 [ai.ts](party/ai.ts) — AI NPC chatroom participant using LLMs 
-- 🐭 [cursors.ts](party/cursors.ts) — Shared cursors
-
-The [`/app`](app/) directory contains a Next.js 13 application, demonstrating client-side usage of PartyKit, including:
-- 📡 [chat/page.tsx](app/chat/page.tsx) — Server Rendering in React Server Components
-- 📱 [RoomList.tsx](app/chat/RoomList.tsx) — Client Rendering with live WebSockets
-- 👮‍♀️ [Room.tsx](app/chat/[roomId]/Room.tsx) — A real-time chatroom with authentication
-- 🖱️ [Cursors.tsx](app/(home)/Cursors.tsx) — Live cursors
-- 🚥 [ConnectionStatus.tsx](app/components/ConnectionStatus.tsx) — Connection status indicator
 
 ## Deploy
 
@@ -60,9 +47,6 @@ In development mode, PartyKit uses your `.env` file to read configuration values
 For production, you'll need to set the production environment variables:
 
 ```bash
-
-# (Optional) Set your OpenAI API key to enable the AI chat participant in production
-npx partykit env add OPENAI_API_KEY
 
 # Redeploy with new variables
 npx partykit deploy

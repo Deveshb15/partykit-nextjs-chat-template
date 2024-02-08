@@ -10,6 +10,7 @@ import Room from "./roomComponents/Room";
 import Avatar from "./roomComponents/Avatar";
 
 import { RoomMap, type RoomName, DEFAULT_ROOM, type User } from "./shared";
+import ClearRoom from "./roomComponents/ClearRoom";
 
 const makeInitials = (name: string) => {
   const words = name.split(" ");
@@ -63,6 +64,7 @@ export default function Page() {
       >
         <AnimatedRoomContainer key={"room1"} name={"room1"} custom={custom}>
           <RoomContextProvider name={"room1" as RoomName} currentUser={user}>
+          {/* <ClearRoom /> */}
             <Room />
           </RoomContextProvider>
         </AnimatedRoomContainer>
