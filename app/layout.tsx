@@ -42,9 +42,9 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Spatial Chat",
+  title: "Team 7",
   description:
-    "Six Thinking Hats in the form of spatial chat and AI chatbot facilitators",
+    "Team 7 for your valentines day needs.",
 };
 
 export default function RootLayout({
