@@ -1,30 +1,53 @@
-import { generateSlug, RandomWordOptions } from "random-word-slugs";
-import { RoomInfo, SINGLETON_ROOM_ID } from "@/party/chatRooms";
-import { RoomList } from "./RoomList";
-import { PARTYKIT_URL } from "@/app/env";
+import { getServerSession } from "next-auth";
+// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import type { User } from "@/party/utils/auth";
+import Link from "next/link";
+import { Room } from "./Room";
+import PresenceBar from "./components/PresenceBar";
+import ClearRoomButton from "./components/ClearRoomButton";
+import { PARTYKIT_HOST, PARTYKIT_URL } from "@/app/env";
 
-import NewRoom from "./components/NewRoom";
-
-const randomWords: RandomWordOptions<3> = {
-  format: "kebab",
-  categories: { noun: ["animals"] },
-  partsOfSpeech: ["adjective", "adjective", "noun"],
-};
-
-const partyUrl = `${PARTYKIT_URL}/parties/chatrooms/${SINGLETON_ROOM_ID}`;
+const party = "chatroom";
 
 export const revalidate = 0;
 
-export default async function RoomListPage() {
-  // fetch rooms for server rendering with a GET request to the server
-  const res = await fetch(partyUrl, { next: { revalidate: 0 } });
-  const rooms = ((await res.json()) ?? []) as RoomInfo[];
+export default async function ChatRoomPage() {
+  // fetch initial data for server rendering
+  const url = `${PARTYKIT_URL}/parties/${party}/team7`;
+  const res = await fetch(url, { next: { revalidate: 0 } });
+  const room = res.status === 404 ? null : await res.json();
+
+  // fetch user session for server rendering
+  const user = null;
 
   return (
-    <div className="w-full flex flex-col gap-6">
-      <h1 className="text-4xl font-medium">Chat Rooms</h1>
-      <RoomList initialRooms={rooms} />
-      <NewRoom slug={generateSlug(3, randomWords)} />
+    <div className="w-full flex flex-col gap-4 justify-between items-start">
+      <div className="flex flex-wrap justify-start items-center gap-x-4 gap-y-2">
+        <Link href="/chat" className="text-stone-400 whitespace-nowrap">
+          &lt;- All Rooms
+        </Link>
+        <ClearRoomButton roomId="team7" />
+      </div>
+      {room ? (
+        <>
+          <div className="w-full flex flex-row justify-between items-start pb-6">
+            {/* <div>
+              <h1 className="text-4xl font-medium">{params.roomId}</h1>
+            </div> */}
+            <PresenceBar roomId="team7" />
+          </div>
+
+          <Room
+            host={PARTYKIT_HOST}
+            party={party}
+            user={user}
+            room="team7"
+            messages={room.messages ?? []}
+          />
+        </>
+      ) : (
+        <h1 className="text-4xl font-medium">Room not found</h1>
+      )}
     </div>
   );
 }

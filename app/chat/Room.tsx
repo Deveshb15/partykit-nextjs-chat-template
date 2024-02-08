@@ -9,16 +9,16 @@ import Link from "next/link";
 import RoomMessage from "./components/RoomMessage";
 import ConnectionStatus from "@/app/components/ConnectionStatus";
 
-const identify = async (socket: PartySocket) => {
-  // the ./auth route will authenticate the connection to the partykit room
-  const url = `${window.location.pathname}/auth?_pk=${socket._pk}`;
-  const req = await fetch(url, { method: "POST" });
+// const identify = async (socket: PartySocket) => {
+//   // the ./auth route will authenticate the connection to the partykit room
+//   const url = `${window.location.pathname}/auth?_pk=${socket._pk}`;
+//   const req = await fetch(url, { method: "POST" });
 
-  if (!req.ok) {
-    const res = await req.text();
-    console.error("Failed to authenticate connection to PartyKit room", res);
-  }
-};
+//   if (!req.ok) {
+//     const res = await req.text();
+//     console.error("Failed to authenticate connection to PartyKit room", res);
+//   }
+// };
 
 export const Room: React.FC<{
   room: string;
@@ -36,11 +36,22 @@ export const Room: React.FC<{
     party,
     room,
     onOpen(e) {
-      // identify user upon connection
-      if (session.status === "authenticated" && e.target) {
-        identify(e.target as PartySocket);
-        if (session?.data?.user) setUser(session.data.user as User);
+      // get from local storage if available
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        // create a random user
+        const newUser = {
+          username: `user-${Math.floor(Math.random() * 10000)}`,
+          name: "Anonymous",
+          image: "https://i.pravatar.cc/300",
+        };
+
+        setUser(newUser);
+        localStorage.setItem("user", JSON.stringify(newUser));
       }
+
     },
     onMessage(event: MessageEvent<string>) {
       const message = JSON.parse(event.data) as ChatMessage;
@@ -59,14 +70,14 @@ export const Room: React.FC<{
   });
 
   // authenticate connection to the partykit room if session status changes
-  useEffect(() => {
-    if (
-      session.status === "authenticated" &&
-      socket?.readyState === socket.OPEN
-    ) {
-      identify(socket);
-    }
-  }, [session.status, socket]);
+  // useEffect(() => {
+  //   if (
+  //     session.status === "authenticated" &&
+  //     socket?.readyState === socket.OPEN
+  //   ) {
+  //     identify(socket);
+  //   }
+  // }, [session.status, socket]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -102,30 +113,14 @@ export const Room: React.FC<{
         ) : (
           <p className="italic">No messages yet</p>
         )}
-        {session.status === "authenticated" ? (
-          <form onSubmit={handleSubmit} className="sticky bottom-4 sm:bottom-6">
-            <input
-              placeholder="Send message..."
-              className="border border-stone-400 p-3 bg-stone-100 min-w-full rounded"
-              type="text"
-              name="message"
-            ></input>
-          </form>
-        ) : session.status === "unauthenticated" ? (
-          <div className="sticky left-4 sm:left-6 bottom-4 sm:bottom-6 pt-2 rounded-sm flex items-start">
-            <p className="bg-red-100 p-3">
-              You must be signed in to post messages.{" "}
-              <Link
-                className="underline"
-                href={`/api/auth/signin?callbackUrl=${window.location.href}`}
-              >
-                Sign in
-              </Link>
-            </p>
-          </div>
-        ) : (
-          <span />
-        )}
+        <form onSubmit={handleSubmit} className="sticky bottom-4 sm:bottom-6">
+          <input
+            placeholder="Send message..."
+            className="border border-stone-400 p-3 bg-stone-100 min-w-full rounded"
+            type="text"
+            name="message"
+          ></input>
+        </form>
       </div>
       <ConnectionStatus socket={socket} />
     </>

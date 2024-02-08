@@ -87,37 +87,6 @@ export default class ChatRoomServer implements Party.Server {
     });
   }
 
-  async authenticateUser(proxiedRequest: Party.Request) {
-    // find the connection
-    const id = new URL(proxiedRequest.url).searchParams.get("_pk");
-    const connection = id && this.party.getConnection(id);
-    if (!connection) {
-      return error(`No connection with id ${id}`);
-    }
-
-    // authenticate the user
-    const session = await getNextAuthSession(proxiedRequest);
-    if (!session) {
-      return error(`No session found`);
-    }
-
-    this.updateRoomList("enter", connection);
-
-    connection.setState({ user: session });
-    connection.send(
-      newMessage({
-        from: { id: "system" },
-        text: `Welcome ${session.username}!`,
-      })
-    );
-
-    if (!this.party.env.OPENAI_API_KEY) {
-      connection.send(
-        systemMessage("OpenAI API key not configured. AI bot is not available")
-      );
-    }
-  }
-
   /**
    * Responds to HTTP requests to /parties/chatroom/:roomId endpoint
    */
@@ -128,11 +97,6 @@ export default class ChatRoomServer implements Party.Server {
     if (request.method === "POST") {
       // respond to authentication requests proxied through the app's
       // rewrite rules. See next.config.js in project root.
-      if (new URL(request.url).pathname.endsWith("/auth")) {
-        await this.authenticateUser(request);
-        return ok();
-      }
-
       await this.party.storage.put("id", this.party.id);
       return ok();
     }
@@ -193,11 +157,6 @@ export default class ChatRoomServer implements Party.Server {
     // handle user messages
     if (message.type === "new" || message.type === "edit") {
       const user = connection.state?.user;
-      if (!isSessionValid(user)) {
-        return connection.send(
-          systemMessage("You must sign in to send messages to this room")
-        );
-      }
 
       if (message.text.length > 1000) {
         return connection.send(systemMessage("Message too long"));
@@ -205,7 +164,7 @@ export default class ChatRoomServer implements Party.Server {
 
       const payload = <Message>{
         id: message.id ?? nanoid(),
-        from: { id: user.username, image: user.image },
+        from: { id: user?.username, image: user?.image },
         text: message.text,
         at: Date.now(),
       };
