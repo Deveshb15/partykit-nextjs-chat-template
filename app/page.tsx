@@ -7,7 +7,6 @@ import { uniqueNamesGenerator, starWars, names, animals, adjectives } from 'uniq
 import AnimatedRoomContainer from "./roomComponents/AnimatedRoomContainer";
 import RoomContextProvider from "./providers/room-context";
 import Room from "./roomComponents/Room";
-import Avatar from "./roomComponents/Avatar";
 
 import { RoomMap, type RoomName, DEFAULT_ROOM, type User } from "./shared";
 import ClearRoom from "./roomComponents/ClearRoom";

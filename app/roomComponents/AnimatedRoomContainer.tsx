@@ -27,7 +27,7 @@ export default function AnimatedRoomContainer(props: {
 
   return (
     <motion.div
-      className={`absolute inset-0 flex flex-col justify-center items-center p-8 bg-gray-800 w-full h-screen max-h-screen`}
+      className={`absolute inset-0 flex flex-col justify-center items-center p-8 bg-[#1f1e1e] w-full h-screen max-h-screen`}
       animate="animate"
       initial="initial"
       exit="exit"
@@ -36,7 +36,7 @@ export default function AnimatedRoomContainer(props: {
       transition={{ duration: 1.5 }}
     >
       <div
-        className={`relative rounded-lg w-full h-full max-h-full ${bgColor}`}
+        className={`relative rounded-lg w-full h-full max-h-full `}
       >
         {children}
       </div>

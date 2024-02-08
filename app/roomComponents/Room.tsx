@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import classNames from "classnames";
 import { useEffect, useState, useRef } from "react";
 import { useRoomContext } from "@/app/providers/room-context";
 import { RoomMap, Message } from "../shared";
 import { useUsers, useSelf } from "y-presence";
-import Avatar from "./Avatar";
 import { useSyncedStore } from "@syncedstore/react";
+import Image from "next/image";
 
 export default function Room() {
   const {
@@ -57,18 +58,18 @@ export default function Room() {
   return (
     <div className="h-full max-h-full flex flex-col justify-between">
       <div className="absolute top-0 right-0 p-4 justify-end flex flex-row -space-x-2">
-          <p>
+          <p className="text-white">
             {users?.size} {users?.size > 1 ? 'are' : 'is'} live currently
           </p>
       </div>
       <div className="p-4 flex flex-col gap-1 justify-start items-start">
         <div className="flex flex-row gap-2">
-          <div className="prose">
+          <div className="prose text-white">
             <h1>{title}</h1>
           </div>
         </div>
         {room?.subtitle && (
-          <h4 className="text-black/50 font-semibold text-lg w-2/3">
+          <h4 className="text-white font-semibold text-lg w-2/3">
             {room.subtitle}
           </h4>
         )}
@@ -95,10 +96,12 @@ export default function Room() {
                     )}
                   >
                     <div className="grow-0">
-                      <Avatar
+                      {/* <Avatar
                         initials={message.initials}
                         variant={"small"}
-                      />
+                      /> */}
+                      <img src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${message?.initials}`} alt="avatar" width="40" height="40" />
+
                     </div>
                     <div className="px-3 py-1 bg-white rounded-2xl flex flex-col">
                       {message.text
