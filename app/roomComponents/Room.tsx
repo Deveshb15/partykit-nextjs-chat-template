@@ -19,10 +19,10 @@ export default function Room() {
   const chatListRef = useRef(null);
 
   const users = useUsers(provider!.awareness);
+  console.log(users?.size);
   const self = useSelf(provider!.awareness);
   // Get room details
   const room = RoomMap[name];
-  const npc = room?.npc;
   const title = room?.title;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,8 +35,6 @@ export default function Room() {
       name: self.name,
       initials: self.initials,
       text: messageInput,
-      isNpc: false,
-      seenByNpc: false,
     } as Message;
 
     store.messages.push(message);
@@ -59,19 +57,9 @@ export default function Room() {
   return (
     <div className="h-full max-h-full flex flex-col justify-between">
       <div className="absolute top-0 right-0 p-4 justify-end flex flex-row -space-x-2">
-        {npc && <Avatar initials={npc.name} variant="npc" />}
-        {Array.from(users.entries())
-          .sort()
-          .map(([key, value]) => {
-            // Skip if value (the awareness object) is empty
-            if (!value.name) return null;
-            const isMe = currentUserId === key.toString();
-            if (isMe) return null;
-            return (
-              <Avatar key={key} initials={value.initials} variant="normal" />
-            );
-          })}
-        <Avatar initials="" variant="ghost" />
+          <p>
+            {users?.size} {users?.size > 1 ? 'are' : 'is'} live currently
+          </p>
       </div>
       <div className="p-4 flex flex-col gap-1 justify-start items-start">
         <div className="flex flex-row gap-2">
@@ -109,7 +97,7 @@ export default function Room() {
                     <div className="grow-0">
                       <Avatar
                         initials={message.initials}
-                        variant={message.isNpc ? "small-npc" : "small"}
+                        variant={"small"}
                       />
                     </div>
                     <div className="px-3 py-1 bg-white rounded-2xl flex flex-col">

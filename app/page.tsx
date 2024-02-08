@@ -11,11 +11,6 @@ import Avatar from "./roomComponents/Avatar";
 
 import { RoomMap, type RoomName, DEFAULT_ROOM, type User } from "./shared";
 
-// In units
-
-// PaneName is an emum of allowed pane numbers
-// PaneMap is a map of PaneName to { top: number, left: number }
-
 const makeInitials = (name: string) => {
   const words = name.split(" ");
   switch (words.length) {
@@ -43,7 +38,6 @@ export default function Page() {
   const [previousRoom, setPreviousRoom] = useState(DEFAULT_ROOM);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const name = window.localStorage.getItem("spatial-chat:name");
@@ -66,41 +60,12 @@ export default function Page() {
   return (
     <main className="relative min-h-screen h-screen max-h-screen flex flex-col bg-gray-800">
       <div
-        className={showSettings ? "pointer-events-none overscroll-none" : ""}
       >
-        <div className="absolute top-0 right-0 p-12 z-10">
-          <div onClick={() => setShowSettings(true)} className="cursor-pointer">
-            {user !== null && (
-              <Avatar initials={user.initials} variant="highlight" />
-            )}
-          </div>
-        </div>
-        <AnimatePresence
-          custom={custom}
-          onExitComplete={() => setIsTransitioning(false)}
-        >
-          {
-            // Iterate over PaneMap getting the pane name and details object
-            Object.entries(RoomMap).map(([roomName, _]) => {
-              return (
-                currentRoom === roomName && (
-                  <AnimatedRoomContainer
-                    key={roomName}
-                    name={roomName as RoomName}
-                    custom={custom}
-                  >
-                    <RoomContextProvider
-                      name={roomName as RoomName}
-                      currentUser={user}
-                    >
-                      <Room />
-                    </RoomContextProvider>
-                  </AnimatedRoomContainer>
-                )
-              );
-            })
-          }
-        </AnimatePresence>
+        <AnimatedRoomContainer key={"room1"} name={"room1"} custom={custom}>
+          <RoomContextProvider name={"room1" as RoomName} currentUser={user}>
+            <Room />
+          </RoomContextProvider>
+        </AnimatedRoomContainer>
       </div>
     </main>
   );
