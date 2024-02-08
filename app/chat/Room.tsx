@@ -1,24 +1,19 @@
 "use client";
 import { FormEventHandler, useEffect, useState } from "react";
 import usePartySocket from "partysocket/react";
-import type { User } from "@/party/utils/auth";
 import type { Message, ChatMessage } from "@/party/utils/message";
-import { useSession } from "next-auth/react";
 import PartySocket from "partysocket";
 import Link from "next/link";
 import RoomMessage from "./components/RoomMessage";
 import ConnectionStatus from "@/app/components/ConnectionStatus";
 
-// const identify = async (socket: PartySocket) => {
-//   // the ./auth route will authenticate the connection to the partykit room
-//   const url = `${window.location.pathname}/auth?_pk=${socket._pk}`;
-//   const req = await fetch(url, { method: "POST" });
-
-//   if (!req.ok) {
-//     const res = await req.text();
-//     console.error("Failed to authenticate connection to PartyKit room", res);
-//   }
-// };
+type User = {
+  username: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  expires?: string;
+};
 
 export const Room: React.FC<{
   room: string;
@@ -28,7 +23,6 @@ export const Room: React.FC<{
   messages: Message[];
 }> = ({ room, host, user: initialUser, party, messages: initialMessages }) => {
   // render with initial data, update from websocket as messages arrive
-  const session = useSession();
   const [messages, setMessages] = useState(initialMessages);
   const [user, setUser] = useState(initialUser);
   const socket = usePartySocket({
@@ -36,6 +30,10 @@ export const Room: React.FC<{
     party,
     room,
     onOpen(e) {
+      // e.target is the WebSocket instance
+      // now that the connection is open, we can send user information
+      // don't use identify, I want to skip authentication for now
+      console.log("socket open ", e.target);
       // get from local storage if available
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -47,11 +45,9 @@ export const Room: React.FC<{
           name: "Anonymous",
           image: "https://i.pravatar.cc/300",
         };
-
+        socket.send(JSON.stringify({ type: "user", user: newUser }));
         setUser(newUser);
-        localStorage.setItem("user", JSON.stringify(newUser));
       }
-
     },
     onMessage(event: MessageEvent<string>) {
       const message = JSON.parse(event.data) as ChatMessage;
@@ -69,15 +65,15 @@ export const Room: React.FC<{
     },
   });
 
-  // authenticate connection to the partykit room if session status changes
-  // useEffect(() => {
-  //   if (
-  //     session.status === "authenticated" &&
-  //     socket?.readyState === socket.OPEN
-  //   ) {
-  //     identify(socket);
-  //   }
-  // }, [session.status, socket]);
+  console.log("messages ", messages);
+
+  useEffect(() => {
+    if (
+      socket?.readyState === socket.OPEN
+    ) {
+      socket.send(JSON.stringify({ type: "sync" }));
+    }
+  }, [socket]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -96,6 +92,8 @@ export const Room: React.FC<{
       behavior: "smooth",
     });
   }
+
+  console.log("messages ", messages);
 
   return (
     <>

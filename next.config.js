@@ -11,15 +11,6 @@ const nextConfig = {
   images: {
     domains: ["localhost", "avatars.githubusercontent.com", "pbs.twimg.com"],
   },
-  rewrites: async () => [
-    {
-      // forward room authentication request to partykit
-      source: "/chat/:roomId/auth",
-      // include connection id in the query
-      has: [{ type: "query", key: "_pk", value: "(?<pk>.*)" }],
-      destination: PARTYKIT_URL + "/parties/chatroom/:roomId/auth?_pk=:pk",
-    },
-  ],
 };
 
 module.exports = nextConfig;

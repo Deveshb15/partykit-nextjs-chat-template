@@ -1,6 +1,5 @@
 import type * as Party from "partykit/server";
 import { nanoid } from "nanoid";
-import { User, getNextAuthSession, isSessionValid } from "./utils/auth";
 import { SINGLETON_ROOM_ID } from "./chatRooms";
 import type {
   Message,
@@ -15,7 +14,14 @@ import {
   systemMessage,
 } from "./utils/message";
 import { error, json, notFound, ok } from "./utils/response";
-import { AI_USER } from "./ai";
+
+type User = {
+  username: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  expires?: string;
+};
 
 const DELETE_MESSAGES_AFTER_INACTIVITY_PERIOD = 1000 * 60 * 60 * 24; // 24 hours
 
@@ -138,9 +144,12 @@ export default class ChatRoomServer implements Party.Server {
     await this.ensureAIParticipant();
 
     // if user is the bot we invited, mark them as an AI user
-    if (connection.id === this.botId) {
-      connection.setState({ user: AI_USER });
-    }
+    // if (connection.id === this.botId) {
+    //   connection.setState({ user: AI_USER });
+    // }
+    // Receive and set user information from the frontend
+    console.log("connection", connection.id);
+    connection.setState({ user: connection.state?.user ?? undefined });
 
     // send the whole list of messages to user when they connect
     connection.send(syncMessage(this.messages ?? []));
@@ -155,8 +164,10 @@ export default class ChatRoomServer implements Party.Server {
   ) {
     const message = JSON.parse(messageString) as UserMessage;
     // handle user messages
+    console.log("connection ", connection.id)
     if (message.type === "new" || message.type === "edit") {
       const user = connection.state?.user;
+      console.log("user", user);
 
       if (message.text.length > 1000) {
         return connection.send(systemMessage("Message too long"));

@@ -1,6 +1,14 @@
 import type * as Party from "partykit/server";
-import { User } from "./utils/auth";
 import { json, notFound } from "./utils/response";
+
+
+type User = {
+  username: string;
+  name?: string;
+  email?: string;
+  image?: string;
+  expires?: string;
+};
 
 /**
  * The chatRooms party's purpose is to keep track of all chat rooms, so we want

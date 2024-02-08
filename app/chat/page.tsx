@@ -1,6 +1,3 @@
-import { getServerSession } from "next-auth";
-// import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import type { User } from "@/party/utils/auth";
 import Link from "next/link";
 import { Room } from "./Room";
 import PresenceBar from "./components/PresenceBar";
