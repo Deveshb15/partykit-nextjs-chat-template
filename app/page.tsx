@@ -2,7 +2,13 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState, useMemo } from "react";
-import { uniqueNamesGenerator, starWars, names, animals, adjectives } from 'unique-names-generator'
+import {
+  uniqueNamesGenerator,
+  starWars,
+  names,
+  animals,
+  adjectives,
+} from "unique-names-generator";
 
 import AnimatedRoomContainer from "./roomComponents/AnimatedRoomContainer";
 import RoomContextProvider from "./providers/room-context";
@@ -44,30 +50,31 @@ export default function Page() {
     if (name) {
       setUser(makeUser(name));
     } else {
-        const name = uniqueNamesGenerator({
-            dictionaries: [adjectives, animals, starWars, names],
-            length: 2
-        });
-        if (name) {
-            window.localStorage.setItem("spatial-chat:name", name);
-            setUser(makeUser(name));
-        }
+      const name = uniqueNamesGenerator({
+        dictionaries: [adjectives, animals, starWars, names],
+        length: 2,
+      });
+      if (name) {
+        window.localStorage.setItem("spatial-chat:name", name);
+        setUser(makeUser(name));
+      }
     }
   }, []);
 
   const custom = { source: previousRoom, destination: currentRoom };
 
   return (
-    <main className="relative min-h-screen h-screen max-h-screen flex flex-col bg-gray-800">
-      <div
-      >
-        <AnimatedRoomContainer key={"room1"} name={"room1"} custom={custom}>
-          <RoomContextProvider name={"room1" as RoomName} currentUser={user}>
-          <ClearRoom />
-            <Room />
-          </RoomContextProvider>
-        </AnimatedRoomContainer>
+    <div className="w-full flex flex-col gap-4 justify-between items-start">
+      <div className="flex flex-wrap justify-start items-center gap-x-4 gap-y-2"></div>
+      <div className="w-full flex flex-row justify-between items-start pb-6">
+        <div>
+          <h1 className="text-4xl font-medium">Singles</h1>
+        </div>
       </div>
-    </main>
+
+      <RoomContextProvider name={"room1" as RoomName} currentUser={user}>
+        <Room />
+      </RoomContextProvider>
+    </div>
   );
 }

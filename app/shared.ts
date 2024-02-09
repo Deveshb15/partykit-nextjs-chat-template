@@ -37,7 +37,7 @@
     name: string;
     initials: string;
     text: string;
-    timestamp?: number;
+    timestamp?: number | string;
   };
   
   export const yDocShape = { messages: [] as Message[] };

@@ -7,6 +7,8 @@ import { useUsers, useSelf } from "y-presence";
 import { useSyncedStore } from "@syncedstore/react";
 import Image from "next/image";
 
+import RoomMessage from "./RoomMessage";
+
 export default function Room() {
   const {
     provider,
@@ -24,7 +26,7 @@ export default function Room() {
   const self = useSelf(provider!.awareness);
   // Get room details
   const room = RoomMap[name];
-  const title = room?.title;
+  // const title = room?.title;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,110 +43,57 @@ export default function Room() {
 
     store.messages.push(message);
     setMessageInput("");
+    setTimeout(() => {
+      scrollToBottom();
+    }, 50);
   };
 
   useEffect(() => {
-    if (chatListRef.current) {
-      // Scroll to bottom
-      const element = chatListRef.current as unknown as HTMLDivElement;
-      element.scrollTop = element.scrollHeight;
-    }
+    scrollToBottom();
   }, [store.messages]);
+
+  function scrollToBottom() {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
 
   if (!provider) return null;
   if (!room) return null;
 
   return (
-    <div className="h-full max-h-full flex flex-col justify-between">
-      <div className="absolute top-0 right-0 p-4 justify-end flex flex-row -space-x-2">
-        <p className="text-white">
+    <>
+      <div className="absolute top-0 w-full h-10 bg-[#FFF]">
+      </div>
+        <p className="fixed top-6 right-10 text-black">
           {users?.size} {users?.size > 1 ? "are" : "is"} live currently
         </p>
+      <div className="h-full w-full flex flex-col gap-6">
+        <ul ref={chatListRef} className="h-full flex flex-col gap-3">
+          {store.messages.map((message: Message, index: number) => {
+            const isMe = currentUserId === message.userId;
+            return (
+              <li key={index}>
+                <RoomMessage message={message} isMe={isMe} />
+              </li>
+            );
+          })}
+        </ul>
+        <form onSubmit={handleSubmit} className="sticky bottom-4 sm:bottom-6">
+          <input
+            placeholder="Send message..."
+            className="border border-stone-400 p-3 bg-stone-100 min-w-full rounded"
+            type="text"
+            name="message"
+            value={messageInput}
+            onChange={(e) => {
+              setMessageInput(e.target.value);
+            }}
+          ></input>
+        </form>
       </div>
-      <div className="p-4 flex flex-col gap-1 justify-start items-start">
-        <div className="flex flex-row gap-2">
-          <div className="prose text-white">
-            <h1>{title}</h1>
-          </div>
-        </div>
-        {room?.subtitle && (
-          <h4 className="text-white font-semibold text-lg w-2/3">
-            {room.subtitle}
-          </h4>
-        )}
-      </div>
-      <div
-        id="chat"
-        className="h-full max-h-full overflow-hidden w-3/4 px-4 pb-4 flex flex-col gap-6 justify-between items-stretch"
-      >
-        <div
-          ref={chatListRef}
-          className="grow h-full max-h-full overflow-y-scroll"
-        >
-          <ul className="flex flex-col-reverse h-full gap-y-2 justify-end p-1">
-            {store.messages
-              .toReversed()
-              .map((message: Message, index: number) => {
-                const isMe = currentUserId === message.userId;
-                return (
-                  <li
-                    key={index}
-                    className={classNames(
-                      "flex justify-start items-end gap-2",
-                      isMe ? "flex-row-reverse" : "flex-row"
-                    )}
-                  >
-                    <div className="grow-0">
-                      {/* <Avatar
-                        initials={message.initials}
-                        variant={"small"}
-                      /> */}
-                      <img
-                        src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${message?.initials}`}
-                        alt="avatar"
-                        width="40"
-                        height="40"
-                      />
-                      {/* timestamp */}
-                    </div>
-                      <div className="px-3 py-1 bg-white rounded-2xl flex flex-col">
-                        {message.text
-                          .split("\n")
-                          .map((line: string, index: number) => {
-                            return <span key={index}>{line}</span>;
-                          })}
-                      </div>
-                      <span className="text-white/50 text-sm">
-                        {new Date(message.timestamp!).toLocaleTimeString()}
-                      </span>
-                    <div className="grow-0 w-3"></div>
-                  </li>
-                );
-              })}
-          </ul>
-        </div>
-        {self?.name && (
-          <form
-            onSubmit={handleSubmit}
-            className="w-full flex flex-row space-x-2"
-          >
-            <input
-              type="text"
-              value={messageInput}
-              className="p-1 w-full"
-              onChange={(e) => {
-                setMessageInput(e.target.value);
-              }}
-            />
-            <button
-              type="submit"
-              className="px-2 py-1 bg-white/60 hover:bg-white"
-            >
-              Send
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
