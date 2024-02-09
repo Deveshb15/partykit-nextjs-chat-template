@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Signout from "./Signout";
-import Avatar from "./Avatar";
 
 type User = {
   username: string;
@@ -21,9 +19,7 @@ export default async function Header() {
         </Link>
         {user && (
           <div className="flex gap-2 items-center">
-            <Avatar username={user?.username} image={user?.image ?? null} />
             <span>Hi {user?.username}!</span>
-            <Signout />
           </div>
         )}
       </nav>

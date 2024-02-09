@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import type { Message } from "../shared";
-import Avatar from "@/app/components/Avatar";
 
 export default function RoomMessage(props: {
   message: Message;

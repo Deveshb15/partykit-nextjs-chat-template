@@ -1,22 +1,26 @@
-import Image from "next/image";
+import classNames from "classnames";
 
 export default function Avatar(props: {
-  username: string;
-  image: string | null;
-  variant?: "normal" | "ghost";
+  initials: string;
+  variant: "normal" | "highlight" | "ghost" | "small";
 }) {
-  const { username, image } = props;
-  const variant = props.variant ?? "normal";
-
+  const { initials } = props;
+  const { variant } = props || "normal";
+  const extraClasses = {
+    normal: "w-10 h-10 bg-green-400 outline-green-600 outline-1",
+    highlight: "w-10 h-10 bg-green-400 outline-green-600 outline-4",
+    ghost:
+      "w-10 h-10 bg-transparent outline-green-600 outline-2 outline-dashed",
+    small: "w-8 h-8 bg-green-400 outline-green-600 outline-1 text-xs",
+  };
   return (
-    <div className="bg-white relative w-8 h-8 rounded-full outline outline-1 outline-stone-200">
-      <Image
-        src={image ?? ""}
-        alt={username}
-        width="128"
-        height="128"
-        className={`rounded-full ${variant === "ghost" ? "opacity-30" : ""}`}
-      />
+    <div
+      className={classNames(
+        "outline rounded-full flex justify-center items-center",
+        extraClasses[variant],
+      )}
+    >
+      {initials}
     </div>
   );
 }
