@@ -68,7 +68,7 @@ export default function Page() {
       <div className="flex flex-wrap justify-start items-center gap-x-4 gap-y-2"></div>
       <div className="w-full flex flex-row justify-between items-start pb-6">
         <div>
-          <h1 className="text-4xl font-medium">Singles</h1>
+          <h1 className="text-4xl">ImSingle.XYZ - <span className="text-[#E25376]">THIS VALENTINE</span>, YOU ARE NOT ALONE.</h1>
         </div>
       </div>
 

@@ -28,7 +28,7 @@ export default function RoomMessage(props: {
         />
       </div>
       <div className={`flex flex-col gap-1 ${isMe ? "items-end" : ""}`}>
-        <span className="bg-stone-100 px-2 py-1 rounded-xl">
+        <span className="bg-stone-100 px-2 py-1 rounded-xl text-lg">
           {message.text}
         </span>
         <span className="text-xs text-stone-400">

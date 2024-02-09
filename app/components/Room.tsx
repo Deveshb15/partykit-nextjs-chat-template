@@ -48,7 +48,9 @@ export default function Room() {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    setTimeout(() => {
+      scrollToBottom();
+    }, 750)
   }, [store.messages]);
 
   function scrollToBottom() {
@@ -63,13 +65,9 @@ export default function Room() {
   if (!room) return null;
 
   return (
-    <>
-      <div className="absolute top-0 w-full h-10 bg-[#FFF]">
-      </div>
-        <p className="fixed top-6 right-10 text-black">
-          {users?.size} {users?.size > 1 ? "are" : "is"} live currently
-        </p>
+    <> 
       <div className="h-full w-full flex flex-col gap-6">
+        <li className="mb-4 pulse-li absolute top-10 right-10"><i className="pulse green"></i><span className="text-black">{users?.size} LIVE</span></li>
         <ul ref={chatListRef} className="h-full flex flex-col gap-3">
           {store.messages.map((message: Message, index: number) => {
             const isMe = currentUserId === message.userId;
@@ -82,8 +80,8 @@ export default function Room() {
         </ul>
         <form onSubmit={handleSubmit} className="sticky bottom-4 sm:bottom-6">
           <input
-            placeholder="Send message..."
-            className="border border-stone-400 p-3 bg-stone-100 min-w-full rounded"
+            placeholder="TYPE RANT HERE..."
+            className="border border-stone-400 p-3 bg-[#E9F0FD] min-w-full rounded text-black text-lg"
             type="text"
             name="message"
             value={messageInput}

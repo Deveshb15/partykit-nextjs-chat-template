@@ -1,10 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {  VT323 } from "next/font/google";
 // import Header from "./components/Header";
 // import Footer from "./components/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const vt323 = VT323({ weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Team 7",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={vt323.className}>
           <div
             className="flex flex-col justify-between relative"
             style={{ minHeight: "100dvh" }}
