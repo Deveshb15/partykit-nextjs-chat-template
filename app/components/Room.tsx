@@ -5,7 +5,6 @@ import { useRoomContext } from "@/app/providers/room-context";
 import { RoomMap, Message } from "../shared";
 import { useUsers, useSelf } from "y-presence";
 import { useSyncedStore } from "@syncedstore/react";
-import Image from "next/image";
 
 import RoomMessage from "./RoomMessage";
 

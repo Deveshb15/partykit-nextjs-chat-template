@@ -10,12 +10,12 @@ import {
   adjectives,
 } from "unique-names-generator";
 
-import AnimatedRoomContainer from "./roomComponents/AnimatedRoomContainer";
+import AnimatedRoomContainer from "./components/AnimatedRoomContainer";
 import RoomContextProvider from "./providers/room-context";
-import Room from "./roomComponents/Room";
+import Room from "./components/Room";
 
 import { RoomMap, type RoomName, DEFAULT_ROOM, type User } from "./shared";
-import ClearRoom from "./roomComponents/ClearRoom";
+import ClearRoom from "./components/ClearRoom";
 
 const makeInitials = (name: string) => {
   const words = name.split(" ");
