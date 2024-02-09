@@ -36,15 +36,18 @@ export default function Room() {
       name: self.name,
       initials: self.initials,
       text: messageInput,
+      timestamp: Date.now(),
     } as Message;
 
     store.messages.push(message);
     setMessageInput("");
-
-
   };
 
   useEffect(() => {
+    store.messages?.toReversed().forEach((message: Message) => {
+      console.log("name ", message.name);
+      console.log("Time", message.timestamp);
+    });
     if (chatListRef.current) {
       // Scroll to bottom
       const element = chatListRef.current as unknown as HTMLDivElement;
@@ -58,9 +61,9 @@ export default function Room() {
   return (
     <div className="h-full max-h-full flex flex-col justify-between">
       <div className="absolute top-0 right-0 p-4 justify-end flex flex-row -space-x-2">
-          <p className="text-white">
-            {users?.size} {users?.size > 1 ? 'are' : 'is'} live currently
-          </p>
+        <p className="text-white">
+          {users?.size} {users?.size > 1 ? "are" : "is"} live currently
+        </p>
       </div>
       <div className="p-4 flex flex-col gap-1 justify-start items-start">
         <div className="flex flex-row gap-2">
@@ -100,16 +103,24 @@ export default function Room() {
                         initials={message.initials}
                         variant={"small"}
                       /> */}
-                      <img src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${message?.initials}`} alt="avatar" width="40" height="40" />
-
+                      <img
+                        src={`https://api.dicebear.com/7.x/lorelei/svg?seed=${message?.initials}`}
+                        alt="avatar"
+                        width="40"
+                        height="40"
+                      />
+                      {/* timestamp */}
                     </div>
-                    <div className="px-3 py-1 bg-white rounded-2xl flex flex-col">
-                      {message.text
-                        .split("\n")
-                        .map((line: string, index: number) => {
-                          return <span key={index}>{line}</span>;
-                        })}
-                    </div>
+                      <div className="px-3 py-1 bg-white rounded-2xl flex flex-col">
+                        {message.text
+                          .split("\n")
+                          .map((line: string, index: number) => {
+                            return <span key={index}>{line}</span>;
+                          })}
+                      </div>
+                      <span className="text-white/50 text-sm">
+                        {new Date(message.timestamp!).toLocaleTimeString()}
+                      </span>
                     <div className="grow-0 w-3"></div>
                   </li>
                 );
