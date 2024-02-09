@@ -44,10 +44,6 @@ export default function Room() {
   };
 
   useEffect(() => {
-    store.messages?.toReversed().forEach((message: Message) => {
-      console.log("name ", message.name);
-      console.log("Time", message.timestamp);
-    });
     if (chatListRef.current) {
       // Scroll to bottom
       const element = chatListRef.current as unknown as HTMLDivElement;

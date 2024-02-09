@@ -63,7 +63,7 @@ export default function Page() {
       >
         <AnimatedRoomContainer key={"room1"} name={"room1"} custom={custom}>
           <RoomContextProvider name={"room1" as RoomName} currentUser={user}>
-          {/* <ClearRoom /> */}
+          <ClearRoom />
             <Room />
           </RoomContextProvider>
         </AnimatedRoomContainer>
