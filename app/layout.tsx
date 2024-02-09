@@ -7,8 +7,8 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PartyKit Template",
-  description: "Example of using PartyKit with Next.js",
+  title: "Team 7",
+  description: "cry alone on this valentines day",
 };
 
 export default function RootLayout({
